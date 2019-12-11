@@ -7,7 +7,6 @@ import (
 	"log"
 	"math/rand"
 	"os"
-	"strconv"
 	"time"
 )
 
@@ -35,20 +34,20 @@ func main() {
 				l[j] = lines[i-1][j]
 				v = lines[i-1][j]
 			}
-			if j == 2 {
-				// fmt.Println(l)
-				// fmt.Println(l[j])
-				if v == "1" || v == "0" {
-				} else {
-					num, err := strconv.ParseFloat(v, 64)
-					if num >= 38 {
-						l[j] = "1"
-					} else {
-						l[j] = "0"
-					}
-					checkError("error", err)
-				}
-			}
+			// if j == 2 {
+			// 	// fmt.Println(l)
+			// 	// fmt.Println(l[j])
+			// 	if v == "1" || v == "0" {
+			// 	} else {
+			// 		num, err := strconv.ParseFloat(v, 64)
+			// 		if num >= 38 {
+			// 			l[j] = "1"
+			// 		} else {
+			// 			l[j] = "0"
+			// 		}
+			// 		checkError("error", err)
+			// 	}
+			// }
 		}
 		if i == 0 {
 			l[0] = l[0][3:]
