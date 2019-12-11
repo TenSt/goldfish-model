@@ -33,6 +33,9 @@ func main() {
 			if v == "null" {
 				l[j] = lines[i-1][j]
 			}
+			if v[0] == '-' {
+				l[j] = v[1:]
+			}
 		}
 		if i == 0 {
 			l[0] = l[0][3:]
@@ -40,6 +43,8 @@ func main() {
 	}
 
 	writer := csv.NewWriter(f)
+	head := []string{"Time", "C.MeteoST_bme280", "C.Gas_boiler_supply", "C.Kitchen_temp", "C.MeteoST_ds18b20"}
+	err = writer.Write(head)
 	err = writer.WriteAll(lines)
 	checkError("Cannot write to file", err)
 }
