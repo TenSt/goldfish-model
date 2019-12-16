@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math"
 	"math/rand"
 	"os"
 	"sort"
@@ -188,14 +189,17 @@ func getJSONData() {
 		num1, err := strconv.ParseFloat(l[1], 64)
 		checkError("num1 error parse:\n", err)
 		num1 = num1 / 100
+		num1 = toFixed(num1, 3)
 		num2, err := strconv.Atoi(l[2])
 		checkError("error atoi:\n", err)
 		num3, err := strconv.ParseFloat(l[3], 64)
 		checkError("num3 error parse:\n", err)
 		num3 = num3 / 100
+		num3 = toFixed(num3, 3)
 		num4, err := strconv.ParseFloat(l[4], 64)
 		checkError("num4 error parse:\n", err)
 		num4 = num4 / 100
+		num4 = toFixed(num4, 3)
 		d := data3{
 			// Time:     time1,
 			MeteoST1: num1,
@@ -251,6 +255,15 @@ func getJSONData() {
 	sort.Strings(categories)
 	fmt.Println(categories)
 	fmt.Println(len(categories))
+}
+
+func round(num float64) int {
+	return int(num + math.Copysign(0.5, num))
+}
+
+func toFixed(num float64, precision int) float64 {
+	output := math.Pow(10, float64(precision))
+	return float64(round(num*output)) / output
 }
 
 func writeToFile(rawData []data3, name string) {
