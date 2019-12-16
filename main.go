@@ -13,7 +13,7 @@ import (
 )
 
 type data struct {
-	Time     time.Time
+	// Time     time.Time
 	MeteoST1 string
 	Boiler   string
 	Kitchen  string
@@ -21,6 +21,10 @@ type data struct {
 }
 
 func main() {
+	getJSONData()
+}
+
+func binData() {
 	lines, err := readCsv("grafana_data_export_edited.csv")
 	if err != nil {
 		log.Println(err)
@@ -54,28 +58,48 @@ func main() {
 			// }
 
 			// categories
+			// if j == 2 {
+			// 	if len(v) == 4 {
+			// 		l[j] = v[:len(v)-2]
+			// 		v = v[:len(v)-2]
+			// 	}
+			// 	num, err := strconv.Atoi(v)
+			// 	checkError("", err)
+			// 	if num <= 35 {
+			// 		l[j] = "0"
+			// 		v = "0"
+			// 	} else if num > 35 && num < 40 {
+			// 		l[j] = "1"
+			// 		v = "1"
+			// 	} else if num >= 40 {
+			// 		l[j] = "2"
+			// 		v = "2"
+			// 	}
+			// 	if a := stringInSlice(v, categories); a == false {
+			// 		categories = append(categories, v)
+			// 	}
+			// }
+
+			// categories 2
 			if j == 2 {
 				if len(v) == 4 {
 					l[j] = v[:len(v)-2]
 					v = v[:len(v)-2]
 				}
-				if v == "0.0" || v == "1.0" || v == "2.0" {
-				} else {
-					num, err := strconv.Atoi(v)
-					checkError("", err)
-					if num <= 35 {
-						l[j] = "0.0"
-						v = "0.0"
-					} else if num > 35 && num < 40 {
-						l[j] = "1.0"
-						v = "1.0"
-					} else if num >= 40 {
-						l[j] = "2.0"
-						v = "2.0"
-					}
-					if a := stringInSlice(v, categories); a == false {
-						categories = append(categories, v)
-					}
+				num, err := strconv.Atoi(v)
+				checkError("", err)
+				if num <= 35 {
+					l[j] = "35"
+					v = "35"
+				} else if num > 35 && num < 40 {
+					l[j] = "40"
+					v = "40"
+				} else if num >= 40 {
+					l[j] = "45"
+					v = "45"
+				}
+				if a := stringInSlice(v, categories); a == false {
+					categories = append(categories, v)
 				}
 			}
 		}
@@ -104,28 +128,53 @@ func stringInSlice(a string, list []string) bool {
 }
 
 func getJSONData() {
-	lines, err := readCsv("grafana_data_export.csv")
+	lines, err := readCsv("grafana_data_export_edited.csv")
 	if err != nil {
 		log.Println(err)
 	}
 
 	var rawData []data
 
+	var categories []string
 	for i, l := range lines {
 		for j, v := range l {
 			if v == "null" {
 				l[j] = lines[i-1][j]
+				v = lines[i-1][j]
+			}
+
+			// categories 2
+			if j == 2 {
+				if len(v) == 4 {
+					l[j] = v[:len(v)-2]
+					v = v[:len(v)-2]
+				}
+				num, err := strconv.Atoi(v)
+				checkError("error atoi:\n", err)
+				if num <= 35 {
+					l[j] = "35"
+					v = "35"
+				} else if num > 35 && num < 40 {
+					l[j] = "40"
+					v = "40"
+				} else if num >= 40 {
+					l[j] = "45"
+					v = "45"
+				}
+				if a := stringInSlice(v, categories); a == false {
+					categories = append(categories, v)
+				}
 			}
 		}
 		if i == 0 {
 			l[0] = l[0][3:]
 		}
-		time1, err := time.Parse(time.RFC3339, l[0])
-		if err != nil {
-			log.Fatal(err)
-		}
+		// time1, err := time.Parse(time.RFC3339, l[0])
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
 		d := data{
-			Time:     time1,
+			// Time:     time1,
 			MeteoST1: l[1],
 			Boiler:   l[2],
 			Kitchen:  l[3],
@@ -150,6 +199,10 @@ func getJSONData() {
 	writeToFile(trainData, "train")
 	writeToFile(testData, "test")
 	writeToFile(validData, "valid")
+
+	sort.Strings(categories)
+	fmt.Println(categories)
+	fmt.Println(len(categories))
 }
 
 func writeToFile(rawData []data, name string) {
