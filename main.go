@@ -20,6 +20,11 @@ type data struct {
 	MeteoST2 string
 }
 
+type data2 struct {
+	X string `json:"x"`
+	Y string `json:"y"`
+}
+
 func main() {
 	getJSONData()
 }
@@ -183,22 +188,47 @@ func getJSONData() {
 		rawData = append(rawData, d)
 	}
 
+	var rawData2 []data2
+	for _, v := range rawData {
+		d := data2{}
+		d.X = v.MeteoST1 + " " + v.MeteoST2 + " " + v.Kitchen
+		d.Y = v.Boiler
+		rawData2 = append(rawData2, d)
+	}
+
+	// data
 	rand.Seed(time.Now().UnixNano())
 	rand.Shuffle(len(rawData), func(i, j int) { rawData[i], rawData[j] = rawData[j], rawData[i] })
 
 	splitTrain := float64(len(rawData)) * 0.7
-	splitTest := float64(len(rawData)) * 0.9
+	splitVal := float64(len(rawData)) * 0.9
 	fmt.Println(int64(splitTrain))
-	fmt.Println(int64(splitTest) - int64(splitTrain))
-	fmt.Println(int64(len(rawData)) - int64(splitTest))
+	fmt.Println(int64(splitVal) - int64(splitTrain))
+	fmt.Println(int64(len(rawData)) - int64(splitVal))
 
 	trainData := rawData[:int64(splitTrain)]
-	testData := rawData[int64(splitTrain):int64(splitTest)]
-	validData := rawData[int64(splitTest):]
+	validData := rawData[int64(splitTrain):int64(splitVal)]
+	testData := rawData[int64(splitVal):]
 
 	writeToFile(trainData, "train")
 	writeToFile(testData, "test")
 	writeToFile(validData, "valid")
+
+	// data2
+	rand.Seed(time.Now().UnixNano())
+	rand.Shuffle(len(rawData2), func(i, j int) { rawData2[i], rawData2[j] = rawData2[j], rawData2[i] })
+
+	fmt.Println(int64(splitTrain))
+	fmt.Println(int64(splitVal) - int64(splitTrain))
+	fmt.Println(int64(len(rawData2)) - int64(splitVal))
+
+	trainData2 := rawData2[:int64(splitTrain)]
+	validData2 := rawData2[int64(splitTrain):int64(splitVal)]
+	testData2 := rawData2[int64(splitVal):]
+
+	writeToFile2(trainData2, "train2")
+	writeToFile2(testData2, "test2")
+	writeToFile2(validData2, "valid2")
 
 	sort.Strings(categories)
 	fmt.Println(categories)
@@ -210,6 +240,21 @@ func writeToFile(rawData []data, name string) {
 	if err != nil {
 		log.Println(err)
 	}
+	f, err := os.Create(name + ".json")
+	checkError("Cannot create file", err)
+	defer f.Close()
+
+	_, err = f.Write(jsonData)
+	checkError("Cannot write to file", err)
+}
+
+func writeToFile2(rawData2 []data2, name string) {
+	fmt.Println(rawData2[0])
+	jsonData, err := json.Marshal(rawData2)
+	if err != nil {
+		log.Println(err)
+	}
+	fmt.Println(string(jsonData[:10]))
 	f, err := os.Create(name + ".json")
 	checkError("Cannot create file", err)
 	defer f.Close()
