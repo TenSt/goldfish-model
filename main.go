@@ -157,14 +157,14 @@ func getJSONData() {
 				num, err := strconv.Atoi(v)
 				checkError("error atoi:\n", err)
 				if num <= 35 {
-					l[j] = "35"
-					v = "35"
+					l[j] = "0"
+					v = "0"
 				} else if num > 35 && num < 40 {
-					l[j] = "40"
-					v = "40"
+					l[j] = "1"
+					v = "1"
 				} else if num >= 40 {
-					l[j] = "45"
-					v = "45"
+					l[j] = "2"
+					v = "2"
 				}
 				if a := stringInSlice(v, categories); a == false {
 					categories = append(categories, v)
