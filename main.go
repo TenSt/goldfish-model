@@ -20,6 +20,13 @@ type data struct {
 	MeteoST2 string
 }
 
+type data3 struct {
+	MeteoST1 float64
+	Boiler   int
+	Kitchen  float64
+	MeteoST2 float64
+}
+
 type data2 struct {
 	X string `json:"x"`
 	Y string `json:"y"`
@@ -138,7 +145,7 @@ func getJSONData() {
 		log.Println(err)
 	}
 
-	var rawData []data
+	var rawData []data3
 
 	var categories []string
 	for i, l := range lines {
@@ -178,23 +185,34 @@ func getJSONData() {
 		// if err != nil {
 		// 	log.Fatal(err)
 		// }
-		d := data{
+		num1, err := strconv.ParseFloat(l[1], 64)
+		checkError("num1 error parse:\n", err)
+		num1 = num1 / 100
+		num2, err := strconv.Atoi(l[2])
+		checkError("error atoi:\n", err)
+		num3, err := strconv.ParseFloat(l[3], 64)
+		checkError("num3 error parse:\n", err)
+		num3 = num3 / 100
+		num4, err := strconv.ParseFloat(l[4], 64)
+		checkError("num4 error parse:\n", err)
+		num4 = num4 / 100
+		d := data3{
 			// Time:     time1,
-			MeteoST1: l[1],
-			Boiler:   l[2],
-			Kitchen:  l[3],
-			MeteoST2: l[4],
+			MeteoST1: num1,
+			Boiler:   num2,
+			Kitchen:  num3,
+			MeteoST2: num4,
 		}
 		rawData = append(rawData, d)
 	}
 
-	var rawData2 []data2
-	for _, v := range rawData {
-		d := data2{}
-		d.X = v.MeteoST1 + " " + v.MeteoST2 + " " + v.Kitchen
-		d.Y = v.Boiler
-		rawData2 = append(rawData2, d)
-	}
+	// var rawData2 []data2
+	// for _, v := range rawData {
+	// 	d := data2{}
+	// 	d.X = v.MeteoST1 + " " + v.MeteoST2 + " " + v.Kitchen
+	// 	d.Y = v.Boiler
+	// 	rawData2 = append(rawData2, d)
+	// }
 
 	// data
 	rand.Seed(time.Now().UnixNano())
@@ -215,27 +233,27 @@ func getJSONData() {
 	writeToFile(validData, "valid")
 
 	// data2
-	rand.Seed(time.Now().UnixNano())
-	rand.Shuffle(len(rawData2), func(i, j int) { rawData2[i], rawData2[j] = rawData2[j], rawData2[i] })
+	// rand.Seed(time.Now().UnixNano())
+	// rand.Shuffle(len(rawData2), func(i, j int) { rawData2[i], rawData2[j] = rawData2[j], rawData2[i] })
 
-	fmt.Println(int64(splitTrain))
-	fmt.Println(int64(splitVal) - int64(splitTrain))
-	fmt.Println(int64(len(rawData2)) - int64(splitVal))
+	// fmt.Println(int64(splitTrain))
+	// fmt.Println(int64(splitVal) - int64(splitTrain))
+	// fmt.Println(int64(len(rawData2)) - int64(splitVal))
 
-	trainData2 := rawData2[:int64(splitTrain)]
-	validData2 := rawData2[int64(splitTrain):int64(splitVal)]
-	testData2 := rawData2[int64(splitVal):]
+	// trainData2 := rawData2[:int64(splitTrain)]
+	// validData2 := rawData2[int64(splitTrain):int64(splitVal)]
+	// testData2 := rawData2[int64(splitVal):]
 
-	writeToFile2(trainData2, "train2")
-	writeToFile2(testData2, "test2")
-	writeToFile2(validData2, "valid2")
+	// writeToFile2(trainData2, "train2")
+	// writeToFile2(testData2, "test2")
+	// writeToFile2(validData2, "valid2")
 
 	sort.Strings(categories)
 	fmt.Println(categories)
 	fmt.Println(len(categories))
 }
 
-func writeToFile(rawData []data, name string) {
+func writeToFile(rawData []data3, name string) {
 	jsonData, err := json.Marshal(rawData)
 	if err != nil {
 		log.Println(err)
