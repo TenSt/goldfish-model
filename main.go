@@ -164,62 +164,44 @@ func getJSONData() {
 				}
 				num, err := strconv.Atoi(v)
 				checkError("error atoi:\n", err)
-				if num <= 35 {
-					l[j] = "0"
-					v = "0"
-				} else if num > 50 {
-					l[j] = "50"
-					v = "50"
-				}
 				switch num {
-				case 35:
+				case 40:
 					l[j] = "0"
 					v = "0"
-				case 36:
+				case 41:
 					l[j] = "1"
 					v = "1"
-				case 37:
+				case 42:
 					l[j] = "2"
 					v = "2"
-				case 38:
+				case 43:
 					l[j] = "3"
 					v = "3"
-				case 39:
+				case 44:
 					l[j] = "4"
 					v = "4"
-				case 40:
+				case 45:
 					l[j] = "5"
 					v = "5"
-				case 41:
+				case 46:
 					l[j] = "6"
 					v = "6"
-				case 42:
+				case 47:
 					l[j] = "7"
 					v = "7"
-				case 43:
+				case 48:
 					l[j] = "8"
 					v = "8"
-				case 44:
+				case 49:
 					l[j] = "9"
 					v = "9"
-				case 45:
-					l[j] = "10"
-					v = "10"
-				case 46:
-					l[j] = "11"
-					v = "11"
-				case 47:
-					l[j] = "12"
-					v = "12"
-				case 48:
-					l[j] = "13"
-					v = "13"
-				case 49:
-					l[j] = "14"
-					v = "14"
-				case 50:
-					l[j] = "15"
-					v = "15"
+				}
+				if num <= 40 {
+					l[j] = "0"
+					v = "0"
+				} else if num >= 50 {
+					l[j] = "9"
+					v = "9"
 				}
 				if a := stringInSlice(v, categories); a == false {
 					categories = append(categories, v)
