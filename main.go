@@ -7,6 +7,8 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"sort"
+	"strconv"
 	"time"
 )
 
@@ -28,12 +30,14 @@ func main() {
 	checkError("Cannot create file", err)
 	defer f.Close()
 
+	var categories []string
 	for i, l := range lines {
 		for j, v := range l {
 			if v == "null" {
 				l[j] = lines[i-1][j]
 				v = lines[i-1][j]
 			}
+			// binary
 			// if j == 2 {
 			// 	// fmt.Println(l)
 			// 	// fmt.Println(l[j])
@@ -48,6 +52,23 @@ func main() {
 			// 		checkError("error", err)
 			// 	}
 			// }
+
+			// categories
+			if j == 2 {
+				if len(v) == 4 {
+					l[j] = v[:len(v)-2]
+					v = v[:len(v)-2]
+				}
+				num, err := strconv.Atoi(v)
+				checkError("", err)
+				if num < 35 {
+					l[j] = "35"
+					v = "35"
+				}
+				if a := stringInSlice(v, categories); a == false {
+					categories = append(categories, v)
+				}
+			}
 		}
 		if i == 0 {
 			l[0] = l[0][3:]
@@ -59,6 +80,18 @@ func main() {
 	err = writer.Write(head)
 	err = writer.WriteAll(lines)
 	checkError("Cannot write to file", err)
+	sort.Strings(categories)
+	fmt.Println(categories)
+	fmt.Println(len(categories))
+}
+
+func stringInSlice(a string, list []string) bool {
+	for _, b := range list {
+		if b == a {
+			return true
+		}
+	}
+	return false
 }
 
 func getJSONData() {
