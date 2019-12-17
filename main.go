@@ -236,6 +236,9 @@ func getJSONData() {
 			Kitchen:  num3,
 			MeteoST2: num4,
 		}
+		if d.Boiler > 0 {
+			fmt.Println(d)
+		}
 		rawData = append(rawData, d)
 	}
 

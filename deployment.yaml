@@ -1,0 +1,68 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: goldfish-model
+  name: goldfish-model
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: goldfish-model
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: goldfish-model
+    spec:
+      containers:
+      - args:
+        - --rest_api_port=8501
+        - --model_name=goldfish
+        - --model_base_path=/mnt/export/goldfish
+        command:
+        - /usr/bin/tensorflow_model_server
+        image: IMG
+        imagePullPolicy: IfNotPresent
+        name: goldfish-model
+        ports:
+        - containerPort: 8501
+          protocol: TCP
+        resources:
+          limits:
+            cpu: "4"
+            memory: 4Gi
+          requests:
+            cpu: "1"
+            memory: 1Gi
+        securityContext:
+          procMount: Default
+          runAsUser: 1000
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: goldfish-model
+  name: goldfish-model
+spec:
+  ports:
+  - name: restapi-tf-serving
+    port: 8501
+    protocol: TCP
+    targetPort: 8501
+  selector:
+    app: goldfish-model
+  sessionAffinity: None
+  type: LoadBalancer
