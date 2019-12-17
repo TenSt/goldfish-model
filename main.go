@@ -35,6 +35,7 @@ type data2 struct {
 
 func main() {
 	getJSONData()
+	// new comment
 }
 
 func binData() {
