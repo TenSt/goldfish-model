@@ -79,7 +79,7 @@ func getJSONData() {
 		} else if num2 >= 39 && num2 < 45 {
 			num2 = 1
 		} else if num2 >= 45 {
-			num2 = 3
+			num2 = 2
 		}
 
 		// br := 39
@@ -143,6 +143,9 @@ func getJSONData() {
 			MeteoST2: num4,
 		}
 		rawData = append(rawData, d)
+		if d.Boiler > 3 {
+			fmt.Println(d)
+		}
 	}
 
 	// sort.Ints(categories)
