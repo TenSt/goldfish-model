@@ -119,6 +119,7 @@ func prepareData(rawData []data3) {
 	validData := rawData[int64(splitTrain):int64(splitVal)]
 	testData := rawData[int64(splitVal):]
 
+	writeToFile(rawData, "full")
 	writeToFile(trainData, "train")
 	writeToFile(testData, "test")
 	writeToFile(validData, "valid")
