@@ -4,6 +4,7 @@ metadata:
   labels:
     app: goldfish-model
   name: goldfish-model
+  namespace: goldfish
 spec:
   replicas: 1
   selector:
@@ -56,6 +57,7 @@ metadata:
   labels:
     app: goldfish-model
   name: goldfish-model
+  namespace: goldfish
 spec:
   ports:
   - name: restapi-tf-serving
