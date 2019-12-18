@@ -62,7 +62,7 @@ func getJSONData() {
 		// meteoST1
 		num1, err := strconv.ParseFloat(l[1], 64)
 		checkError("num1 error parse:\n", err)
-		// num1 = num1 * 10 / 1000
+		num1 = num1 * 10 / 1000
 
 		// boiler !!!
 		numFloat2, err := strconv.ParseFloat(l[2], 64)
@@ -87,12 +87,12 @@ func getJSONData() {
 		// kitchen
 		num3, err := strconv.ParseFloat(l[3], 64)
 		checkError("num3 error parse:\n", err)
-		// num3 = num3 * 10 / 1000
+		num3 = num3 * 10 / 1000
 
 		// meteoST2
 		num4, err := strconv.ParseFloat(l[4], 64)
 		checkError("num4 error parse:\n", err)
-		// num4 = num4 * 10 / 1000
+		num4 = num4 * 10 / 1000
 
 		// cats
 		if v, k := catMST1[num1]; k == false {
