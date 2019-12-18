@@ -69,10 +69,13 @@ func getJSONData() {
 		checkError("error atoi:\n", err)
 		margin := 4.8
 		numFloat2 = numFloat2 + margin
-		num2 := int(math.Round(numFloat2)) - 22
-		if num2 == 34 {
+		num2 := int(math.Round(numFloat2))
+		if num2 < 33 {
 			num2 = 33
+		} else if num2 > 46 {
+			num2 = 46
 		}
+		num2 = num2 - 33 // the lowes cat
 
 		// kitchen
 		num3, err := strconv.ParseFloat(l[3], 64)
@@ -122,14 +125,12 @@ func getJSONData() {
 	fmt.Println("catBoiler: \n", catBoiler)
 	fmt.Println(len(catBoiler))
 
-	fmt.Println("catMST1: \n", catMST1)
-	fmt.Println(len(catMST1))
-
-	fmt.Println("catMST2: \n", catMST2)
-	fmt.Println(len(catMST2))
-
-	fmt.Println("catKitchen: \n", catKitchen)
-	fmt.Println(len(catKitchen))
+	// fmt.Println("catMST1: \n", catMST1)
+	// fmt.Println(len(catMST1))
+	// fmt.Println("catMST2: \n", catMST2)
+	// fmt.Println(len(catMST2))
+	// fmt.Println("catKitchen: \n", catKitchen)
+	// fmt.Println(len(catKitchen))
 
 	prepareData(rawData)
 }
