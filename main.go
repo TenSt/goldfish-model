@@ -56,13 +56,16 @@ func getJSONData() {
 				v = lines[i-1][j]
 			}
 		}
+	}
+
+	for i, l := range lines {
 		if i == 0 {
 			l[0] = l[0][3:]
 		}
 		// meteoST1
 		num1, err := strconv.ParseFloat(l[1], 64)
 		checkError("num1 error parse:\n", err)
-		num1 = num1 * 10 / 1000
+		// num1 = num1 * 10 / 1000
 
 		// boiler !!!
 		numFloat2, err := strconv.ParseFloat(l[2], 64)
@@ -70,13 +73,17 @@ func getJSONData() {
 		margin := 4.8
 		numFloat2 = numFloat2 + margin
 		num2 := int(math.Round(numFloat2))
-		br := 40
-		if num2 < br {
+		br := 39
+		if num2 < br-1 {
 			continue
-		} else if num2 > 46 {
-			num2 = 46
+		} else if num2 == 38 || num2 == 39 {
+			num2 = 39 - br
+		} else if num2 > 40 && num2 < 44 {
+			num2 = 40 - br
+		} else if num2 > 44 {
+			num2 = 44 - br
 		}
-		num2 = num2 - br // the lowes cat
+		// num2 = num2 - br // the lowes cat
 		// if num2 < 33 {
 		// 	num2 = 33
 		// } else if num2 > 46 {
@@ -87,12 +94,12 @@ func getJSONData() {
 		// kitchen
 		num3, err := strconv.ParseFloat(l[3], 64)
 		checkError("num3 error parse:\n", err)
-		num3 = num3 * 10 / 1000
+		// num3 = num3 * 10 / 1000
 
 		// meteoST2
 		num4, err := strconv.ParseFloat(l[4], 64)
 		checkError("num4 error parse:\n", err)
-		num4 = num4 * 10 / 1000
+		// num4 = num4 * 10 / 1000
 
 		// cats
 		if v, k := catMST1[num1]; k == false {
