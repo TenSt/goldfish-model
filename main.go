@@ -67,6 +67,9 @@ func getJSONData() {
 		margin := 4.8
 		numFloat2 = numFloat2 + margin
 		num2 := int(math.Round(numFloat2)) - 22
+		if num2 == 34 {
+			num2 = 33
+		}
 
 		// cats
 		if v, k := categories[num2]; k == false {
