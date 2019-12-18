@@ -78,9 +78,9 @@ func getJSONData() {
 			continue
 		} else if num2 == 38 || num2 == 39 {
 			num2 = 39 - br
-		} else if num2 > 40 && num2 < 44 {
+		} else if num2 >= 40 && num2 < 44 {
 			num2 = 40 - br
-		} else if num2 > 44 {
+		} else if num2 >= 44 {
 			num2 = 44 - br
 		}
 		// num2 = num2 - br // the lowes cat
