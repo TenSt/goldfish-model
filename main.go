@@ -45,7 +45,10 @@ func getJSONData() {
 
 	var rawData []data3
 
-	categories := make(map[int]int)
+	catBoiler := make(map[int]int)
+	catMST1 := make(map[float64]int)
+	catMST2 := make(map[float64]int)
+	catKitchen := make(map[float64]int)
 	for i, l := range lines {
 		for j, v := range l {
 			if v == "null" {
@@ -59,7 +62,7 @@ func getJSONData() {
 		// meteoST1
 		num1, err := strconv.ParseFloat(l[1], 64)
 		checkError("num1 error parse:\n", err)
-		num1 = num1 * 10 / 1000
+		// num1 = num1 * 10 / 1000
 
 		// boiler !!!
 		numFloat2, err := strconv.ParseFloat(l[2], 64)
@@ -71,22 +74,40 @@ func getJSONData() {
 			num2 = 33
 		}
 
-		// cats
-		if v, k := categories[num2]; k == false {
-			categories[num2] = 1
-		} else {
-			categories[num2] = v + 1
-		}
-
 		// kitchen
 		num3, err := strconv.ParseFloat(l[3], 64)
 		checkError("num3 error parse:\n", err)
-		num3 = num3 * 10 / 1000
+		// num3 = num3 * 10 / 1000
 
 		// meteoST2
 		num4, err := strconv.ParseFloat(l[4], 64)
 		checkError("num4 error parse:\n", err)
-		num4 = num4 * 10 / 1000
+		// num4 = num4 * 10 / 1000
+
+		// cats
+		if v, k := catMST1[num1]; k == false {
+			catMST1[num1] = 1
+		} else {
+			catMST1[num1] = v + 1
+		}
+
+		if v, k := catBoiler[num2]; k == false {
+			catBoiler[num2] = 1
+		} else {
+			catBoiler[num2] = v + 1
+		}
+
+		if v, k := catKitchen[num3]; k == false {
+			catKitchen[num3] = 1
+		} else {
+			catKitchen[num3] = v + 1
+		}
+
+		if v, k := catMST2[num4]; k == false {
+			catMST2[num4] = 1
+		} else {
+			catMST2[num4] = v + 1
+		}
 
 		d := data3{
 			MeteoST1: num1,
@@ -98,8 +119,17 @@ func getJSONData() {
 	}
 
 	// sort.Ints(categories)
-	fmt.Println(categories)
-	fmt.Println(len(categories))
+	fmt.Println("catBoiler: \n", catBoiler)
+	fmt.Println(len(catBoiler))
+
+	fmt.Println("catMST1: \n", catMST1)
+	fmt.Println(len(catMST1))
+
+	fmt.Println("catMST2: \n", catMST2)
+	fmt.Println(len(catMST2))
+
+	fmt.Println("catKitchen: \n", catKitchen)
+	fmt.Println(len(catKitchen))
 
 	prepareData(rawData)
 }
