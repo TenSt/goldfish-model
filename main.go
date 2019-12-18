@@ -73,16 +73,26 @@ func getJSONData() {
 		margin := 4.8
 		numFloat2 = numFloat2 + margin
 		num2 := int(math.Round(numFloat2))
-		br := 39
-		if num2 < br-1 {
-			continue
-		} else if num2 == 38 || num2 == 39 {
-			num2 = 39 - br
-		} else if num2 >= 40 && num2 < 44 {
-			num2 = 40 - br
-		} else if num2 >= 44 {
-			num2 = 44 - br - 3
+
+		if num2 <= 39 {
+			num2 = 0
+		} else if num2 >= 39 && num2 < 45 {
+			num2 = 1
+		} else if num2 >= 45 {
+			num2 = 3
 		}
+
+		// br := 39
+		// if num2 < br-1 {
+		// 	continue
+		// } else if num2 == 38 || num2 == 39 {
+		// 	num2 = 39 - br
+		// } else if num2 >= 40 && num2 < 44 {
+		// 	num2 = 40 - br
+		// } else if num2 >= 44 {
+		// 	num2 = 44 - br - 3
+		// }
+
 		// num2 = num2 - br // the lowes cat
 		// if num2 < 33 {
 		// 	num2 = 33
@@ -151,6 +161,7 @@ func getJSONData() {
 
 func prepareData(rawData []data3) {
 	// data
+	writeToFile(rawData, "full")
 	rand.Seed(time.Now().UnixNano())
 	rand.Shuffle(len(rawData), func(i, j int) { rawData[i], rawData[j] = rawData[j], rawData[i] })
 
@@ -164,7 +175,6 @@ func prepareData(rawData []data3) {
 	validData := rawData[int64(splitTrain):int64(splitVal)]
 	testData := rawData[int64(splitVal):]
 
-	writeToFile(rawData, "full")
 	writeToFile(trainData, "train")
 	writeToFile(testData, "test")
 	writeToFile(validData, "valid")
