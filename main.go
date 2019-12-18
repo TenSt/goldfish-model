@@ -70,12 +70,13 @@ func getJSONData() {
 		margin := 4.8
 		numFloat2 = numFloat2 + margin
 		num2 := int(math.Round(numFloat2))
-		if num2 < 38 {
+		br := 40
+		if num2 < br {
 			continue
 		} else if num2 > 46 {
 			num2 = 46
 		}
-		num2 = num2 - 38 // the lowes cat
+		num2 = num2 - br // the lowes cat
 		// if num2 < 33 {
 		// 	num2 = 33
 		// } else if num2 > 46 {
