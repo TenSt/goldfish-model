@@ -53,6 +53,6 @@ jobs:
       run: |
         kubectl patch serviceaccount default -n goldfish -p '{"imagePullSecrets": [{"name": "registry-secret"}]}'
     - name: Deploy to K8S
-    run: |
-      kubectl apply -f deployment.yaml
+      run: |
+        kubectl apply -f deployment.yaml
     
