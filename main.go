@@ -78,13 +78,13 @@ func getJSONData() {
 		numFloat2 = numFloat2 + margin
 		num2 := int(math.Round(numFloat2))
 
-		if num2 < 38 {
+		if num2 < 40 {
 			continue
-		} else if num2 <= 39 {
+		} else if num2 < 43 {
 			num2 = 0
-		} else if num2 > 39 && num2 < 44 {
+		} else if num2 >= 43 && num2 < 46 {
 			num2 = 1
-		} else if num2 >= 44 {
+		} else if num2 >= 46 {
 			num2 = 2
 		}
 
