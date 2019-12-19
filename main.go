@@ -67,9 +67,9 @@ func getJSONData() {
 		checkError("num1 error parse:\n", err)
 		// num1 = num1 * 10 / 1000
 		num1 = math.Round(num1)
-		if num1 > 15 {
-			continue
-		}
+		// if num1 > 15 {
+		// 	continue
+		// }
 
 		// boiler !!!
 		numFloat2, err := strconv.ParseFloat(l[2], 64)
@@ -78,9 +78,10 @@ func getJSONData() {
 		numFloat2 = numFloat2 + margin
 		num2 := int(math.Round(numFloat2))
 
-		if num2 < 38 {
-			continue
-		} else if num2 <= 39 {
+		// if num2 < 38 {
+		// 	continue
+		// } else
+		if num2 <= 39 {
 			num2 = 0
 		} else if num2 > 39 && num2 < 44 {
 			num2 = 1
@@ -111,16 +112,16 @@ func getJSONData() {
 		num3, err := strconv.ParseFloat(l[3], 64)
 		checkError("num3 error parse:\n", err)
 		// num3 = num3 * 10 / 1000
-		num3 = math.Round(num3)
+		// num3 = math.Round(num3)
 
 		// meteoST2
 		num4, err := strconv.ParseFloat(l[4], 64)
 		checkError("num4 error parse:\n", err)
 		// num4 = num4 * 10 / 1000
-		num4 = math.Round(num4)
-		if num4 > 15 {
-			continue
-		}
+		// num4 = math.Round(num4)
+		// if num4 > 15 {
+		// 	continue
+		// }
 
 		// cats
 		if v, k := catMST1[num1]; k == false {
