@@ -67,9 +67,9 @@ func getJSONData() {
 		checkError("num1 error parse:\n", err)
 		// num1 = num1 * 10 / 1000
 		num1 = math.Round(num1)
-		if num1 > 15 {
-			continue
-		}
+		// if num1 > 15 {
+		// 	continue
+		// }
 
 		// boiler !!!
 		numFloat2, err := strconv.ParseFloat(l[2], 64)
@@ -120,9 +120,9 @@ func getJSONData() {
 		checkError("num4 error parse:\n", err)
 		// num4 = num4 * 10 / 1000
 		// num4 = math.Round(num4)
-		if num4 > 15 {
-			continue
-		}
+		// if num4 > 15 {
+		// 	continue
+		// }
 
 		// cats
 		if v, k := catMST1[num1]; k == false {
