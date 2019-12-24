@@ -138,9 +138,11 @@ func dataPrep() {
 		temp = d
 	}
 
-	// for i, l := range temps {
-	// 	writeCSV(l, "./newData/"+i)
-	// }
+	for i, d := range pickedData {
+		if d.Boiler < 40 {
+			pickedData[i].Boiler = 39
+		}
+	}
 
 	writeCSV(lines, "./newData/fullData")
 	// writeFile(rawData, "./newData/fullDataSorted")
