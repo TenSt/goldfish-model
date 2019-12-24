@@ -8,17 +8,10 @@ import (
 	"math"
 	"math/rand"
 	"os"
+	"sort"
 	"strconv"
 	"time"
 )
-
-type data struct {
-	// Time     time.Time
-	MeteoST1 string
-	Boiler   string
-	Kitchen  string
-	MeteoST2 string
-}
 
 type data3 struct {
 	MeteoST1 float64
@@ -27,14 +20,164 @@ type data3 struct {
 	MeteoST2 float64
 }
 
-type data2 struct {
-	X string `json:"x"`
-	Y string `json:"y"`
+type data4 struct {
+	Meteo  int `json:"meteo"`
+	Boiler int `json:"boiler"`
+	House  int `json:"house"`
 }
 
 func main() {
-	getJSONData()
-	// new comment
+	// getJSONData()
+	dataPrep()
+}
+
+func dataPrep() {
+	lines, err := readCsv("grafana_data_export_edited.csv")
+	if err != nil {
+		log.Println(err)
+	}
+
+	for i, l := range lines {
+		for j, v := range l {
+			if v == "null" {
+				l[j] = lines[i-1][j]
+				v = lines[i-1][j]
+			}
+		}
+	}
+	for i, l := range lines {
+		if i == 0 {
+			l[0] = l[0][3:]
+		}
+		// lines[i] = lines[i][1:]
+	}
+	k := 1
+	temps := make(map[string][][]string)
+	var rawData []data4
+	for i, l := range lines {
+
+		if i == 0 {
+			l[0] = l[0][3:]
+		}
+
+		var s string
+		// meteoST1
+		num1, err := strconv.ParseFloat(l[k], 64)
+		checkError("num1 error parse:\n", err)
+		// meteoST2
+		num4, err := strconv.ParseFloat(l[k+3], 64)
+		checkError("num4 error parse:\n", err)
+		// meteo average
+		num5 := (num1 + num4) / 2.0
+		num5 = math.Round(num5)
+		s = strconv.Itoa(int(num5))
+		lines[i][k+3] = s
+
+		// boiler
+		numFloat2, err := strconv.ParseFloat(l[k+1], 64)
+		checkError("error atoi:\n", err)
+		margin := 4.8
+		numFloat2 = numFloat2 + margin
+		num2 := math.Round(numFloat2)
+		s = strconv.Itoa(int(num2))
+		lines[i][k+1] = s
+
+		// kitchen
+		num3, err := strconv.ParseFloat(l[k+2], 64)
+		checkError("num3 error parse:\n", err)
+		num3 = math.Round(num3)
+		s = strconv.Itoa(int(num3))
+		s1 := s
+		lines[i][k+2] = s
+
+		lines[i] = lines[i][2:]
+		temps[s1] = append(temps[s1], lines[i])
+
+		d := data4{
+			Meteo:  int(num5),
+			Boiler: int(num2),
+			House:  int(num3),
+		}
+		rawData = append(rawData, d)
+	}
+
+	sort.Slice(rawData, func(i, j int) bool {
+		if rawData[i].House < rawData[j].House {
+			return true
+		}
+		if rawData[i].House > rawData[j].House {
+			return false
+		}
+		return rawData[i].Meteo < rawData[j].Meteo
+	})
+
+	var pickedData []data4
+	// var m, b, h int
+	var temp data4
+	for i, d := range rawData {
+		if i == 0 {
+			temp = d
+			continue
+		}
+		if i == len(rawData)-1 {
+			if temp.House == d.House && temp.Meteo == d.Meteo {
+				if temp.Boiler < d.House {
+					temp = d
+				}
+			}
+			pickedData = append(pickedData, temp)
+		}
+		if temp.House == d.House && temp.Meteo == d.Meteo {
+			if temp.Boiler < d.House {
+				temp = d
+				continue
+			}
+			continue
+		}
+		pickedData = append(pickedData, temp)
+		temp = d
+	}
+
+	// for i, l := range temps {
+	// 	writeCSV(l, "./newData/"+i)
+	// }
+
+	writeCSV(lines, "./newData/fullData")
+	// writeFile(rawData, "./newData/fullDataSorted")
+	writeFile(pickedData, "./newData/fullDataPicked")
+}
+
+func writeCSV(lines [][]string, name string) {
+	f, err := os.Create(name + ".csv")
+	checkError("Cannot create file", err)
+	writer := csv.NewWriter(f)
+
+	defer func() {
+		writer.Flush()
+		f.Close()
+	}()
+
+	err = writer.WriteAll(lines)
+	checkError("Cannot write to file", err)
+}
+
+func writeFile(data []data4, name string) {
+	f, err := os.Create(name + ".csv")
+	checkError("Cannot create file", err)
+	writer := csv.NewWriter(f)
+
+	defer func() {
+		writer.Flush()
+		f.Close()
+	}()
+
+	for _, d := range data {
+		var line []string
+		line = append(line, strconv.Itoa(d.House), strconv.Itoa(d.Meteo), strconv.Itoa(d.Boiler))
+		err = writer.Write(line)
+		checkError("Cannot write to file", err)
+	}
+
 }
 
 func getJSONData() {
@@ -200,15 +343,6 @@ func intInSlice(a int, m map[int]int) bool {
 		}
 	}
 	return false
-}
-
-func round(num float64) int {
-	return int(num + math.Copysign(0.5, num))
-}
-
-func toFixed(num float64, precision int) float64 {
-	output := math.Pow(10, float64(precision))
-	return float64(round(num*output)) / output
 }
 
 func writeToFile(rawData []data3, name string) {
