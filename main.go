@@ -145,6 +145,7 @@ func dataPrep() {
 	writeCSV(lines, "./newData/fullData")
 	// writeFile(rawData, "./newData/fullDataSorted")
 	writeFile(pickedData, "./newData/fullDataPicked")
+	prepareData4(pickedData)
 }
 
 func writeCSV(lines [][]string, name string) {
@@ -382,4 +383,38 @@ func readCsv(filename string) ([][]string, error) {
 	}
 
 	return lines, nil
+}
+
+func prepareData4(rawData []data4) {
+	// data
+	writeToFile4(rawData, "./newData/full")
+	rand.Seed(time.Now().UnixNano())
+	rand.Shuffle(len(rawData), func(i, j int) { rawData[i], rawData[j] = rawData[j], rawData[i] })
+
+	splitTrain := float64(len(rawData)) * 0.7
+	splitVal := float64(len(rawData)) * 0.9
+	fmt.Println(int64(splitTrain))
+	fmt.Println(int64(splitVal) - int64(splitTrain))
+	fmt.Println(int64(len(rawData)) - int64(splitVal))
+
+	trainData := rawData[:int64(splitTrain)]
+	validData := rawData[int64(splitTrain):int64(splitVal)]
+	testData := rawData[int64(splitVal):]
+
+	writeToFile4(trainData, "./newData/train")
+	writeToFile4(testData, "./newData/test")
+	writeToFile4(validData, "./newData/valid")
+}
+
+func writeToFile4(rawData []data4, name string) {
+	jsonData, err := json.Marshal(rawData)
+	if err != nil {
+		log.Println(err)
+	}
+	f, err := os.Create(name + ".json")
+	checkError("Cannot create file", err)
+	defer f.Close()
+
+	_, err = f.Write(jsonData)
+	checkError("Cannot write to file", err)
 }
