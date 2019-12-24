@@ -145,6 +145,7 @@ func dataPrep() {
 		} else if d.Boiler > 45 {
 			pickedData[i].Boiler = 45
 		}
+		pickedData[i].Boiler = pickedData[i].Boiler - 39
 		if v, k := catBoiler[pickedData[i].Boiler]; k == false {
 			catBoiler[pickedData[i].Boiler] = 1
 		} else {
