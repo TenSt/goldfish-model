@@ -138,9 +138,17 @@ func dataPrep() {
 		temp = d
 	}
 
+	catBoiler := make(map[int]int)
 	for i, d := range pickedData {
 		if d.Boiler < 40 {
 			pickedData[i].Boiler = 39
+		} else if d.Boiler > 45 {
+			pickedData[i].Boiler = 45
+		}
+		if v, k := catBoiler[pickedData[i].Boiler]; k == false {
+			catBoiler[pickedData[i].Boiler] = 1
+		} else {
+			catBoiler[pickedData[i].Boiler] = v + 1
 		}
 	}
 
@@ -148,6 +156,8 @@ func dataPrep() {
 	// writeFile(rawData, "./newData/fullDataSorted")
 	writeFile(pickedData, "./newData/fullDataPicked")
 	prepareData4(pickedData)
+	fmt.Println(catBoiler)
+	fmt.Println(len(catBoiler))
 }
 
 func writeCSV(lines [][]string, name string) {
