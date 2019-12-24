@@ -114,7 +114,11 @@ func dataPrep() {
 	var pickedData []data4
 	// var m, b, h int
 	var temp data4
+	konst := 40
 	for i, d := range rawData {
+		if d.Boiler < konst {
+			continue
+		}
 		if i == 0 {
 			temp = d
 			continue
@@ -145,7 +149,7 @@ func dataPrep() {
 		} else if d.Boiler > 45 {
 			pickedData[i].Boiler = 45
 		}
-		pickedData[i].Boiler = pickedData[i].Boiler - 39
+		pickedData[i].Boiler = pickedData[i].Boiler - konst
 		if v, k := catBoiler[pickedData[i].Boiler]; k == false {
 			catBoiler[pickedData[i].Boiler] = 1
 		} else {
