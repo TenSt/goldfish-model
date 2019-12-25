@@ -52,6 +52,9 @@ func dataPrep() {
 		// lines[i] = lines[i][1:]
 	}
 	k := 1
+	konst := 39
+	konstHouse := 20
+	konstMeteo := 9
 	temps := make(map[string][][]string)
 	var rawData []data4
 	for i, l := range lines {
@@ -98,6 +101,12 @@ func dataPrep() {
 			Boiler: int(num2),
 			House:  int(num3),
 		}
+		if d.Boiler < konst {
+			continue
+		}
+		if d.House < 20 {
+			continue
+		}
 		rawData = append(rawData, d)
 	}
 
@@ -114,11 +123,7 @@ func dataPrep() {
 	var pickedData []data4
 	// var m, b, h int
 	var temp data4
-	konst := 40
 	for i, d := range rawData {
-		if d.Boiler < konst {
-			continue
-		}
 		if i == 0 {
 			temp = d
 			continue
@@ -150,6 +155,8 @@ func dataPrep() {
 			pickedData[i].Boiler = 45
 		}
 		pickedData[i].Boiler = pickedData[i].Boiler - konst
+		pickedData[i].House = pickedData[i].House - konstHouse
+		pickedData[i].Meteo = pickedData[i].Meteo + konstMeteo
 		if v, k := catBoiler[pickedData[i].Boiler]; k == false {
 			catBoiler[pickedData[i].Boiler] = 1
 		} else {
